@@ -2,8 +2,8 @@ from rest_framework import viewsets, permissions, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
-from .models import Item, UserItem
-from .serializers import ItemSerializer, UserItemSerializer
+from .models import Item, UserItem, Category
+from .serializers import ItemSerializer, UserItemSerializer, CategorySerializer
 
 
 class ItemViewSet(viewsets.ModelViewSet):
@@ -29,4 +29,15 @@ class ItemViewSet(viewsets.ModelViewSet):
         user_item.save()
 
         serializer = UserItemSerializer(user.items.all(), many=True)
+        return Response(serializer.data)
+
+
+class CategoryViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
+
+    @action(detail=True)
+    def items(self, request, *args, **kwargs):
+        category = self.get_object()
+        serializer = ItemSerializer(category.items.all(), many=True)
         return Response(serializer.data)
