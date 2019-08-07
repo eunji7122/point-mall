@@ -12,9 +12,12 @@ class ItemViewSet(viewsets.ModelViewSet):
     serializer_class = ItemSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
+    # detail=True /items/1/purchase
+    # detail=False /items/purchase
     @action(detail=True, methods=['POST'])
     def purchase(self, request, *args, **kwargs):
         item = self.get_object()
+        # item = self.queryset.get(pk=kwargs['pk']) 윗줄과 같은 의미
         user = request.user
 
         if item.price > user.point:
