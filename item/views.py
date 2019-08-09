@@ -73,5 +73,9 @@ class CategoryViewSet(viewsets.ReadOnlyModelViewSet):
     @action(detail=True)
     def items(self, request, *args, **kwargs):
         category = self.get_object()
-        serializer = ItemSerializer(category.items.all(), many=True)
+        # 이미지 경로가 media부터 시작함
+        # serializer = ItemSerializer(category.items.all(), many=True)
+
+        # 이미지 경로가 url임
+        serializer = ItemSerializer(category.items.all(), many=True, context=self.get_serializer_context())
         return Response(serializer.data)
