@@ -1,8 +1,9 @@
-from rest_framework import viewsets, permissions, status
+from rest_framework import viewsets, status, permissions
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from django.db import transaction
-
+from item.permissions import IsPurchase, IsSafeMethod
+from rest_condition import Or, And
 from .models import Item, UserItem, Category
 from .serializers import ItemSerializer, UserItemSerializer, CategorySerializer
 
@@ -10,7 +11,7 @@ from .serializers import ItemSerializer, UserItemSerializer, CategorySerializer
 class ItemViewSet(viewsets.ModelViewSet):
     queryset = Item.objects.all()
     serializer_class = ItemSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    permission_classes = (Or(IsSafeMethod, permissions.IsAdminUser, And(IsPurchase, permissions.IsAuthenticated)),)
 
     # detail=True /items/1/purchase
     # detail=False /items/purchase
