@@ -40,6 +40,8 @@ class UserViewSet(viewsets.ReadOnlyModelViewSet, mixins.CreateModelMixin):
         serializer = UserItemSerializer(user.items.all(), many=True, context=self.get_serializer_context())
         return Response(serializer.data)
 
+    # mixins.CreateModelMixin을 상속받아 회원가입 메소드를 생성
+    # make_password를 사용하여 회원가입 시 비밀번호를 해쉬화하여 DB에 저장
     def perform_create(self, serializer):
         serializer.save(
             password=make_password(self.request.data['password'])
