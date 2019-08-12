@@ -11,7 +11,12 @@ from .serializers import ItemSerializer, UserItemSerializer, CategorySerializer
 class ItemViewSet(viewsets.ModelViewSet):
     queryset = Item.objects.all()
     serializer_class = ItemSerializer
-    permission_classes = (Or(IsSafeMethod, permissions.IsAdminUser, And(IsPurchase, permissions.IsAuthenticated)),)
+
+    # permission_classes의 값이 최종적으로 True면 구매메소드에 접근하고, False면 접근하지 않음
+    permission_classes = (Or(IsSafeMethod,
+                             permissions.IsAdminUser,
+                             And(IsPurchase, permissions.IsAuthenticated)),
+                          )
 
     # detail=True /items/1/purchase
     # detail=False /items/purchase
