@@ -21,3 +21,15 @@ class UserItem(models.Model):
     user = models.ForeignKey(User, related_name='items', on_delete=models.CASCADE)
     item = models.ForeignKey(Item, on_delete=models.CASCADE)
     count = models.IntegerField(default=0)
+
+
+class History(models.Model):
+    user = models.ForeignKey(User, related_name='histories', on_delete=models.CASCADE)
+    created = models.DateTimeField(auto_now_add=True)
+    is_refunded = models.BooleanField(default=False)
+
+
+class HistoryItem(models.Model):
+    history = models.ForeignKey(History, related_name='items', on_delete=models.CASCADE)
+    item = models.ForeignKey(Item, on_delete=models.CASCADE)
+    count = models.IntegerField(default=0)

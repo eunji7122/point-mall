@@ -25,4 +25,5 @@ urlpatterns = [
     path('me/', include('user.urls.me_urls')),
     path('categories/', include('item.urls.category_urls')),
     path('media/uploads/item_images/<str:file_name>', views.image_view),
+    path('histories/', include('item.urls.history_urls')),
 ]
