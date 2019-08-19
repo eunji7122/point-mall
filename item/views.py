@@ -98,3 +98,7 @@ class CategoryViewSet(viewsets.ReadOnlyModelViewSet):
 class HistoryViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = History.objects.all()
     serializer_class = HistorySerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        return History.objects.filter(user=self.request.user)

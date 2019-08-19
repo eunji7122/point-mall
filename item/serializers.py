@@ -38,4 +38,4 @@ class HistorySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = History
-        fields = ['user', 'created', 'is_refunded', 'items']
+        fields = ['id', 'user', 'created', 'is_refunded', 'items']
