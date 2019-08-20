@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from django.db import transaction
 from item.permissions import IsPurchase, IsSafeMethod
 from rest_condition import Or, And
-from .models import Item, UserItem, Category, History, HistoryItem
+from .models import Item, UserItem, Category, History, HistoryItem, Tag
 from .serializers import ItemSerializer, UserItemSerializer, CategorySerializer, HistorySerializer
 
 
@@ -17,6 +17,46 @@ class ItemViewSet(viewsets.ModelViewSet):
                              permissions.IsAdminUser,
                              And(IsPurchase, permissions.IsAuthenticated)),
                           )
+
+    def perform_create(self, serializer):
+        item = serializer.save()
+        category_ids = self.request.data['category_ids'].split(',')
+        categories = Category.objects.filter(id__in=category_ids)
+        item.categories.set(categories)
+
+        tags = self.request.data['tags'].split(',')
+        for tag in tags:
+            tag, is_created = Tag.objects.get_or_create(tag=tag)
+            item.tags.add(tag)
+
+    def perform_update(self, serializer):
+        item = serializer.save()
+        category_ids = self.request.data['category_ids'].split(',')
+        categories = Category.objects.filter(id__in=category_ids)
+        item.categories.set(categories)
+
+        tags = self.request.data['tags'].split(',')
+        tag_list = []
+        for tag in tags:
+            tag, is_created = Tag.objects.get_or_create(tag=tag)
+            tag_list.append(tag)
+        item.tags.set(tag_list)
+
+    @action(detail=True, methods=['POST', 'DELETE'])
+    def tags(self, request, *args, **kwargs):
+        item = self.get_object()
+        if request.method == 'POST':
+            for tag in request.data['tags']:
+                tag, is_created = Tag.objects.get_or_create(tag=tag)
+                item.tags.add(tag)
+        elif request.method == 'DELETE':
+            for tag in request.data['tags']:
+                try:
+                    tag = Tag.objects.get(tag=tag)
+                    item.tags.remove(tag)
+                except Tag.DoesNotExist:
+                    pass
+        return Response(self.get_serializer(item).data)
 
     # detail=True /items/1/purchase
     # detail=False /items/purchase
@@ -101,4 +141,37 @@ class HistoryViewSet(viewsets.ReadOnlyModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
-        return History.objects.filter(user=self.request.user)
+        return History.objects.filter(user=self.request.user).order_by('-id')
+
+    @action(detail=True, methods=['POST'])
+    def refund(self, request, *args, **kwargs):
+        history = self.get_object()
+        user = request.user
+
+        # history에서 접근 권한이 없는 유저를 거름
+        if history.user != request.user:
+            return Response(status=status.HTTP_403_FORBIDDEN)
+        elif history.is_refunded:
+            return Response(status=status.HTTP_422_UNPROCESSABLE_ENTITY)
+
+        for history_item in history.items.all():
+            try:
+                # 개수 차감
+                user_item = UserItem.objects.get(user=user, item=history_item.item)
+                user_item.count -= history_item.count
+
+                if user_item.count > 0:
+                    user_item.save()
+                else:
+                    user_item.delete()
+
+                # 포인트 되돌려줌
+                user.point += history_item.item.price * history_item.count
+            except UserItem.DoesNotExist:
+                pass
+        history.is_refunded = True
+        history.save()
+        user.save()
+
+        serializer = self.get_serializer(history)
+        return Response(serializer.data)
