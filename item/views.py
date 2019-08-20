@@ -5,7 +5,8 @@ from django.db import transaction
 from item.permissions import IsPurchase, IsSafeMethod
 from rest_condition import Or, And
 from .models import Item, UserItem, Category, History, HistoryItem, Tag
-from .serializers import ItemSerializer, UserItemSerializer, CategorySerializer, HistorySerializer
+from .serializers import ItemSerializer, UserItemSerializer, CategorySerializer, HistorySerializer, TagSerializer
+from rest_framework.views import APIView
 
 
 class ItemViewSet(viewsets.ModelViewSet):
@@ -175,3 +176,14 @@ class HistoryViewSet(viewsets.ReadOnlyModelViewSet):
 
         serializer = self.get_serializer(history)
         return Response(serializer.data)
+
+
+class TagItems(APIView):
+    def get(self, request, tag):
+        items = []
+        try:
+            tag = Tag.objects.get(tag=tag)
+            items = tag.items.all()
+        except Tag.DoesNotExist:
+            pass
+        return Response(ItemSerializer(items, many=True, context={'request': request}).data)
