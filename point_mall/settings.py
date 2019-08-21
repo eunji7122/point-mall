@@ -25,7 +25,7 @@ SECRET_KEY = 'rj!uq(=ci98p88x6khz12r$egl7ft*huj362v3+wt*c&@6$z-='
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 AUTH_USER_MODEL = 'user.User'
 

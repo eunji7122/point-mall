@@ -9,5 +9,6 @@ oauthlib==3.0.2
 Pillow==6.1.0
 pytz==2019.1
 requests==2.22.0
+rest-condition==1.0.3
 sqlparse==0.3.0
 urllib3==1.25.3
