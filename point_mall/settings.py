@@ -128,9 +128,6 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
-STATIC_URL = '/static/'
-MEDIA_ROOT = 'media/'
-MEDIA_URL = '/media/'
 
 CORS_ORIGIN_ALLOW_ALL = True
 
@@ -144,3 +141,20 @@ OAUTH2_PROVIDER = {
     'OAUTH2_BACKEND_CLASS': 'oauth2_provider.oauth2_backends.JSONOAuthLibCore',
     'ACCESS_TOKEN_EXPIRE_SECONDS': 36000,
 }
+
+AWS_ACCESS_KEY_ID = 'ASIA3G76D35TJESFENFR'
+AWS_SECRET_ACCESS_KEY = 'PJnAz1DGxjBf7EFGFBqqsQ3GNcSYimRl6LADsKtO'
+AWS_SESSION_TOKEN = 'FQoGZXIvYXdzEF0aDK8ySiSIBjnxYN2+7yKAAoffnQZVK9mxw3Jk2rjEUfTWWFh1OJtPiaGvnXIQWWwf2qoKTUCq4fmuqXVWsoWOyir632wxX2iul91/QyJ3THiDdC55ibwMfDl3sSnPBG4cd7YH7QppDKs2oQ3O75FcSrqtwnXfsIsks+4x+gH0iGV7jKPCM0hBzXwM5ozt+8s7uYD+Q4ObZWvGwIsV5RqYtkvlhiHaxhVDJmIrEacowlaG2Fkd1ThN98N3nYXcD1x4yUIYxHsyv3y8MdI2WnY2R75fInFAMOvD3qVKJsXEgEsHgEkV9xSMcqwMigtW5STMqH2GdrBux27mj2SQnrQ92gk0y26bulR75TGpJBI8xDAozrz96gU='
+
+AWS_STORAGE_BUCKET_NAME = 'cdn.pointmall.eunji'
+AWS_S3_CUSTOM_DOMAIN = 'dovfl35p9s280.cloudfront.net'
+AWS_S3_URL = 'https://%s/' % AWS_S3_CUSTOM_DOMAIN
+AWS_S3_SIGNATURE_VERSION = 's3v4'
+
+STATIC_URL = '/static/'
+STATIC_ROOT = 'static/'
+STATICFILES_STORAGE = 'point_mall.storages.StaticStorage'
+
+AWS_LOCATION = 'assets/'
+ASSET_URL = '%s%s' % (AWS_S3_URL, AWS_LOCATION)
+DEFAULT_FILE_STORAGE = 'point_mall.storages.FileStorage'
