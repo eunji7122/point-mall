@@ -8,3 +8,7 @@ def image_view(request, file_name):
 
     ext = file_name.split('.')[1]
     return HttpResponse(image_data, content_type='image/' + ext)
+
+@api_view(['GET'])
+def root_view(request):
+    return HttpResponse('Point Mall Django API')
