@@ -86,7 +86,7 @@ DATABASES = {
         'NAME': 'point_mall',
         'USER': 'root',
         'PASSWORD': 'ehcl0923',
-        'HOST': 'point-mall.c0oouvnqvndj.us-east-1.rds.amazonaws.com',
+        'HOST': 'pointmall.cx9qpplsnaa5.ap-northeast-2.rds.amazonaws.com',
         'PORT': '3306',
     }
 }
@@ -142,12 +142,8 @@ OAUTH2_PROVIDER = {
     'ACCESS_TOKEN_EXPIRE_SECONDS': 36000,
 }
 
-AWS_ACCESS_KEY_ID = 'ASIA3G76D35TKVSMOPIL'
-AWS_SECRET_ACCESS_KEY = 'jGKxle/1z7yk2jGp6ZlVra4PXoOUma7wuVhtp4y1'
-AWS_SESSION_TOKEN = 'FQoGZXIvYXdzEKb//////////wEaDGP7sF+KPDpx3zVSUCKAAmloPLJDDiZfLlRh+n1hYfwNnaB98Y9CAp6sJMrTia2Ps9+ZNbmVv5yTnV5t7U9syX+8c38sBAFzP0lUC/FQYCW21t82w5+YlSG9eriW5Ma0d5vgCn15ZlNaYm0/ZO/CVMKFsIH27UuH/bq7lKwbFmwemxAqiM1P11bK4KGJFsjmgc15YD2zjlFLat8hhW92FzRNn/zdYfaH0YKERxB/2l9byEj3cC4k6wunV5ud7R48qKWW9ELPUMgqKRtePGRpun+tL92Y8o1tKcyZDuB2rCMuKKPCZKzsoyky20zfNmnHf3uHPnDLM6yYbY2dXwSgPkHZykBOeJ34LmAVCQBPMPYo8LaN6wU='
-
-AWS_STORAGE_BUCKET_NAME = 'cdn.pointmall.eunji'
-AWS_S3_CUSTOM_DOMAIN = 'd1a1lkow1r5u27.cloudfront.net'
+AWS_STORAGE_BUCKET_NAME = 'cdn.pointmall.ej'
+AWS_S3_CUSTOM_DOMAIN = 'd1tgf2ouy3qgl5.cloudfront.net'
 AWS_S3_URL = 'https://%s/' % AWS_S3_CUSTOM_DOMAIN
 AWS_S3_SIGNATURE_VERSION = 's3v4'
 
@@ -157,4 +153,4 @@ STATICFILES_STORAGE = 'point_mall.storages.StaticStorage'
 
 AWS_LOCATION = 'assets/'
 ASSET_URL = '%s%s' % (AWS_S3_URL, AWS_LOCATION)
-DEFAULT_FILE_STORAGE = 'point_mall.storages.FileStorage'
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
